@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aadhaar Insights | Societal Trends & Analytics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS VARIABLES & THEME CONFIG --- */
+        :root {
+            /* BRAND COLORS (Constant across themes) */
+            --primary: #000080;       /* Navy Blue */
+            --saffron: #FF9933;       /* Saffron */
+            --green: #138808;         /* India Green */
+            
+            /* LIGHT THEME DEFAULT (Semantic Variables) */
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-nav: rgba(255, 255, 255, 0.95);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: rgba(0,0,0,0.05);
+            --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --hero-overlay: linear-gradient(180deg, rgba(240, 249, 255, 0) 0%, rgba(240, 249, 255, 1) 100%);
+            
+            /* Gradients */
+            --grad-primary: linear-gradient(135deg, #000080 0%, #1e3a8a 100%);
+            --grad-tricolor: linear-gradient(90deg, #FF9933, #ffffff, #138808);
+        }
+
+        /* DARK THEME OVERRIDES */
+        [data-theme="dark"] {
+            --bg-body: #050511;       /* Deep Space Navy */
+            --bg-card: #0f172a;       /* Lighter Navy for cards */
+            --bg-nav: rgba(5, 5, 17, 0.95);
+            --text-main: #f1f5f9;     /* Off-white */
+            --text-muted: #94a3b8;    /* Light Gray */
+            --border-color: rgba(255,255,255,0.1);
+            --shadow-card: 0 10px 30px -3px rgba(0, 0, 0, 0.5);
+            --hero-overlay: linear-gradient(180deg, rgba(5, 5, 17, 0) 0%, rgba(5, 5, 17, 1) 100%);
+            
+            /* Adjust brand visibility for dark mode */
+            --primary: #60a5fa;       /* Lighter blue for better contrast on dark */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5 { font-family: 'Poppins', sans-serif; color: var(--text-main); }
+        
+        /* --- UTILITIES --- */
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+        .section-padding { padding: 80px 0; }
+        .text-center { text-align: center; }
+        .text-gradient {
+            background: linear-gradient(135deg, var(--saffron) 0%, var(--green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: var(--saffron);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 153, 51, 0.4);
+        }
+        
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255, 153, 51, 0.5); }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--saffron);
+            color: var(--text-main);
+        }
+        
+        .btn-outline:hover { background: var(--saffron); color: white; border-color: var(--saffron); }
+
+        /* --- HEADER & NAV --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: var(--bg-nav);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-links { display: flex; gap: 30px; list-style: none; align-items: center;}
+        .nav-links a { text-decoration: none; color: var(--text-main); font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--saffron); }
+        
+        /* THEME TOGGLE BUTTON */
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .theme-toggle:hover { background: var(--bg-card); transform: rotate(15deg); }
+        
+        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 6px; }
+        .bar { width: 25px; height: 3px; background-color: var(--text-main); transition: 0.3s; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            padding-top: 160px;
+            padding-bottom: 100px;
+            background: var(--hero-overlay);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 153, 51, 0.1);
+            color: var(--saffron);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 153, 51, 0.2);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+        }
+
+        /* --- STATS SECTION --- */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            text-align: center;
+            border-bottom: 4px solid transparent;
+            transition: transform 0.3s;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-card:hover { transform: translateY(-10px); }
+        .stat-card:nth-child(1) { border-bottom-color: var(--saffron); }
+        .stat-card:nth-child(2) { border-bottom-color: var(--text-muted); }
+        .stat-card:nth-child(3) { border-bottom-color: var(--primary); }
+        .stat-card:nth-child(4) { border-bottom-color: var(--green); }
+
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 5px; }
+        .stat-label { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- SECTIONS GENERAL --- */
+        .section-title {
+            margin-bottom: 60px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--grad-tricolor);
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        /* --- PROBLEM & INSIGHTS --- */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+
+        .feature-card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--saffron);
+        }
+
+        .feature-card h4 { color: var(--text-main); }
+        .feature-card p { color: var(--text-muted); }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: rgba(255, 153, 51, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--saffron);
+        }
+
+        /* --- VISUALIZATIONS (Placeholders) --- */
+        .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        
+        .chart-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-color);
+        }
+        
+        .chart-placeholder {
+            height: 250px;
+            background: rgba(0,0,0,0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            position: relative;
+        }
+        
+        .chart-bar {
+            width: 20px;
+            background: var(--primary);
+            margin: 0 5px;
+            border-radius: 4px 4px 0 0;
+            opacity: 0.7;
+        }
+
+        .chart-info { padding: 20px; }
+        .chart-info h5 { color: var(--text-main); }
+        .chart-info p { color: var(--text-muted); }
+
+        /* --- METHODOLOGY --- */
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+        .timeline::before {
+            content: ''; position: absolute; left: 50%; width: 2px; height: 100%;
+            background: var(--border-color); transform: translateX(-50%);
+        }
+        
+        .timeline-item { margin-bottom: 40px; position: relative; width: 50%; }
+        .timeline-item:nth-child(odd) { left: 0; padding-right: 40px; text-align: right; }
+        .timeline-item:nth-child(even) { left: 50%; padding-left: 40px; }
+        
+        .timeline-dot {
+            width: 20px; height: 20px; background: var(--saffron);
+            border-radius: 50%; position: absolute; top: 0;
+            border: 4px solid var(--bg-body); box-shadow: 0 0 0 2px var(--saffron);
+        }
+        .timeline-item:nth-child(odd) .timeline-dot { right: -10px; }
+        .timeline-item:nth-child(even) .timeline-dot { left: -10px; }
+        .timeline-item h4 { color: var(--text-main); }
+        .timeline-item p { color: var(--text-muted); }
+
+        /* --- TEAM --- */
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
+        .team-card { text-align: center; }
+        
+        /* UPDATED AVATAR STYLES FOR PHOTOS */
+        .avatar {
+            width: 120px; 
+            height: 120px; 
+            border-radius: 50%; 
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            border: 4px solid var(--bg-card);
+            box-shadow: var(--shadow-card);
+            overflow: hidden; /* Important for cropping images */
+        }
+        
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures photos fill the circle perfectly */
+        }
+        
+        .team-card h4 { color: var(--text-main); }
+        .team-card p { color: var(--text-muted); }
+
+        /* --- FOOTER --- */
+        footer { background: #0f172a; color: white; padding: 60px 0 20px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer h3 { color: white; margin-bottom: 20px; }
+        .footer-links li { list-style: none; margin-bottom: 10px; }
+        .footer-links a { color: #94a3b8; text-decoration: none; }
+        .footer-links a:hover { color: var(--saffron); }
+        .copyright { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #64748b; font-size: 0.9rem; }
+
+        /* --- ANIMATION CLASSES --- */
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .grid-2 { grid-template-columns: 1fr; gap: 30px; }
+            .nav-links {
+                position: fixed; top: 80px; left: -100%; width: 100%; background: var(--bg-card);
+                flex-direction: column; padding: 40px; box-shadow: var(--shadow-card); transition: 0.3s;
+            }
+            .nav-links.active { left: 0; }
+            .hamburger { display: flex; }
+            .timeline::before { left: 20px; }
+            .timeline-item { width: 100%; padding-left: 50px; padding-right: 0; text-align: left; }
+            .timeline-item:nth-child(even) { left: 0; }
+            .timeline-item:nth-child(odd) .timeline-dot, .timeline-item:nth-child(even) .timeline-dot { left: 10px; right: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#FF9933" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17L12 22L22 17" stroke="#138808" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="#000080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Aadhaar Insights
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#problem">Problem</a></li>
+                    <li><a href="#insights">Insights</a></li>
+                    <li><a href="#methodology">Methodology</a></li>
+                    <li><a href="http://localhost:8501" target="_blank" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.9rem;">Dashboard</a></li>
+                    
+                    <li>
+                        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode">
+                            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                        </button>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="container text-center fade-in">
+            <span class="hero-badge">Hackathon Project 2026</span>
+            <h1 class="text-gradient">Unlocking Societal Trends <br>in Aadhaar Data</h1>
+            <p>Identifying meaningful patterns, migration trends, and predictive indicators to support informed decision-making and system improvements.</p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <a href="http://localhost:8501" target="_blank" class="btn btn-primary">Launch Dashboard</a>
+                <a href="#problem" class="btn btn-outline">Read Analysis</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="stats-container fade-in">
+            <div class="stat-card">
+                <span class="stat-number" data-target="28">0</span>
+                <span class="stat-label">States Covered</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" data-target="700">0</span>
+                <span class="stat-label">Districts Mapped</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" data-target="15">0</span>
+                <span class="stat-label">Trend Indicators</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" data-target="100">0</span>
+                <span class="stat-label">% Accuracy</span>
+            </div>
+        </div>
+    </div>
+
+    <section id="problem" class="section-padding">
+        <div class="container">
+            <div class="grid-2">
+                <div class="fade-in">
+                    <h2 class="section-title">The Challenge</h2>
+                    <h3 style="margin-bottom: 20px; font-weight: 500;">Decoding the world's largest biometric database.</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">
+                        The Aadhaar ecosystem generates massive volumes of enrolment and update logs. While operationally efficient, this data holds untapped potential for understanding societal shifts.
+                    </p>
+                    <p style="color: var(--text-muted);">
+                        Our goal is to analyze anonymized datasets to detect **migration corridors**, **demographic gaps**, and **service delivery anomalies** without compromising user privacy.
+                    </p>
+                </div>
+                <div class="fade-in">
+                    <div style="background: var(--bg-card); padding: 40px; border-radius: 20px; box-shadow: var(--shadow-card); position: relative; overflow: hidden; border: 1px solid var(--border-color);">
+                        <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: var(--saffron); opacity: 0.1; border-radius: 50%;"></div>
+                        <div style="position: absolute; bottom: -20px; left: -20px; width: 80px; height: 80px; background: var(--green); opacity: 0.1; border-radius: 50%;"></div>
+                        
+                        <h4 style="margin-bottom: 15px; color: var(--text-main);">Key Research Questions:</h4>
+                        <ul style="list-style: none; color: var(--text-main);">
+                            <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                <span style="color: var(--saffron);">✓</span> Where are people moving? (Address Updates)
+                            </li>
+                            <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                <span style="color: var(--primary);">✓</span> Are children being enrolled on time?
+                            </li>
+                            <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                <span style="color: var(--green);">✓</span> Which districts lag in digital linkage?
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="insights" class="section-padding">
+        <div class="container">
+            <div class="text-center fade-in">
+                <h2 class="section-title">Key Insights</h2>
+                <p style="margin-bottom: 50px; color: var(--text-muted);">Major patterns discovered from the dataset analysis.</p>
+            </div>
+            
+            <div class="grid-4">
+                <div class="feature-card fade-in">
+                    <div class="icon-box">📍</div>
+                    <h4>Migration Corridors</h4>
+                    <p style="font-size: 0.9rem;">High volume of address updates from Rural Bihar to Urban Delhi indicating seasonal labor migration.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="icon-box">📱</div>
+                    <h4>Digital Divide</h4>
+                    <p style="font-size: 0.9rem;">Mobile linkage updates are 40% lower in specific tribal districts compared to state averages.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="icon-box">👶</div>
+                    <h4>Child Saturation</h4>
+                    <p style="font-size: 0.9rem;">Mandatory biometric updates at age 5 show a 95% compliance rate in southern states.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="icon-box">⚠️</div>
+                    <h4>Anomaly Detection</h4>
+                    <p style="font-size: 0.9rem;">Identified statistical outliers in update requests suggesting potential operator errors.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding" style="background-color: var(--bg-body);">
+        <div class="container">
+            <div class="text-center fade-in">
+                <h2 class="section-title">Data Visualizations</h2>
+                <p style="margin-bottom: 50px; color: var(--text-muted);">Snapshots from our interactive Python dashboard.</p>
+            </div>
+            
+            <div class="chart-grid">
+                <div class="chart-card fade-in">
+                    <div class="chart-placeholder">
+                        <div class="chart-bar" style="height: 40%"></div>
+                        <div class="chart-bar" style="height: 70%"></div>
+                        <div class="chart-bar" style="height: 50%"></div>
+                        <div class="chart-bar" style="height: 90%"></div>
+                        <div class="chart-bar" style="height: 60%"></div>
+                    </div>
+                    <div class="chart-info">
+                        <h5>Enrolment vs Updates</h5>
+                        <p style="font-size: 0.85rem;">Comparative volume analysis over Q3 2025.</p>
+                    </div>
+                </div>
+                <div class="chart-card fade-in">
+                    <div class="chart-placeholder">
+                        <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+                            <path d="M50 10 L90 50 L50 90 L10 50 Z" stroke="#cbd5e1" stroke-width="2"/>
+                            <circle cx="50" cy="50" r="10" fill="#FF9933"/>
+                            <circle cx="70" cy="30" r="5" fill="#000080"/>
+                            <circle cx="30" cy="70" r="8" fill="#138808"/>
+                        </svg>
+                    </div>
+                    <div class="chart-info">
+                        <h5>Geospatial Heatmap</h5>
+                        <p style="font-size: 0.85rem;">District-wise activity saturation levels.</p>
+                    </div>
+                </div>
+                <div class="chart-card fade-in">
+                    <div class="chart-placeholder">
+                        <div style="width: 80px; height: 80px; border-radius: 50%; border: 10px solid var(--primary); border-top-color: var(--saffron);"></div>
+                    </div>
+                    <div class="chart-info">
+                        <h5>Demographic Split</h5>
+                        <p style="font-size: 0.85rem;">Age and Gender distribution of applicants.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="methodology" class="section-padding">
+        <div class="container">
+            <div class="text-center fade-in">
+                <h2 class="section-title">Methodology</h2>
+                <p style="margin-bottom: 50px; color: var(--text-muted);">Our technical approach to the problem statement.</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <h4>Data Ingestion</h4>
+                    <p style="font-size: 0.9rem;">Processed large CSV files using Python Pandas with chunking to handle memory efficiency.</p>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <h4>Preprocessing</h4>
+                    <p style="font-size: 0.9rem;">Standardized state names, handled missing values, and converted date formats.</p>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <h4>Exploratory Analysis</h4>
+                    <p style="font-size: 0.9rem;">Conducted Univariate and Bivariate analysis to understand distributions and correlations.</p>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <h4>Insight Generation</h4>
+                    <p style="font-size: 0.9rem;">Applied Z-Score for anomaly detection and aggregated data for trend visualization.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team" class="section-padding">
+        <div class="container">
+            <div class="text-center fade-in">
+                <h2 class="section-title">Our Team</h2>
+            </div>
+            <div class="team-grid">
+                
+                <div class="team-card fade-in">
+                    <div class="avatar">
+                        <img src="img.jpg" alt="Data Lead & Analyst">
+                    </div>
+                    <h4>Data Lead & Analyst</h4>
+                    <p style="font-size: 0.9rem;">Backend, Logic & Insights</p>
+                </div>
+
+                <div class="team-card fade-in">
+                    <div class="avatar">
+                        <img src="shree white~2.jpg" alt="UI Designer">
+                    </div>
+                    <h4>UI Designer</h4>
+                    <p style="font-size: 0.9rem;">Frontend & Visuals</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding" style="background: linear-gradient(135deg, #FF9933 0%, #000080 100%); color: white; text-align: center;">
+        <div class="container fade-in">
+            <h2 style="color: white; margin-bottom: 20px;">Ready to explore the data?</h2>
+            <p style="max-width: 600px; margin: 0 auto 40px; color: rgba(255,255,255,0.8);">
+                Dive deep into the district-level analytics and discover the trends shaping the nation.
+            </p>
+            <a href="http://localhost:8501" target="_blank" class="btn" style="background: white; color: var(--primary);">Open Interactive Dashboard</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Aadhaar Insights</h3>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">
+                        A hackathon project dedicated to unlocking societal value from administrative data.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#problem">Problem Statement</a></li>
+                        <li><a href="#methodology">Methodology</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Connect</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">GitHub Repo</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Contact Team</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 Aadhaar Insights Team. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- THEME TOGGLE LOGIC ---
+        const toggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        // 1. Check for saved user preference, if any, on load
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            htmlElement.setAttribute('data-theme', savedTheme);
+        }
+
+        // 2. Add Event Listener to Toggle Button
+        toggleBtn.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            // Set attribute for CSS to catch
+            htmlElement.setAttribute('data-theme', newTheme);
+            
+            // Save to LocalStorage
+            localStorage.setItem('theme', newTheme);
+            
+            // Animation for icon (optional spin)
+            toggleBtn.style.transform = 'rotate(360deg)';
+            setTimeout(() => toggleBtn.style.transform = '', 300);
+        });
+
+        // --- MOBILE MENU ---
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // --- ANIMATED COUNTERS ---
+        const counters = document.querySelectorAll('.stat-number');
+        const speed = 200;
+
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const inc = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc);
+                        setTimeout(updateCount, 20);
+                    } else {
+                        counter.innerText = target;
+                        if(target > 100) counter.innerText += "+"; 
+                        if(target == 100) counter.innerText += "%"; 
+                    }
+                }
+                updateCount();
+            });
+        }
+
+        // --- SCROLL ANIMATIONS ---
+        const observerOptions = { threshold: 0.2 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    if (entry.target.querySelector('.stat-number')) {
+                        animateCounters();
+                    }
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // --- HEADER SCROLL SHADOW ---
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = "var(--shadow-card)";
+            } else {
+                header.style.boxShadow = "none";
+            }
+        });
+    </script>
+</body>
+</html>
